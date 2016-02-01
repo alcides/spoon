@@ -415,7 +415,7 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 						if (lst.get(i) != null && compare(lst.get(i), toReplace)) {
 							lst.remove(i);
 							if (replacement != null) {
-								lst.add(i, getReplacement(toReplace, replacement, parent));
+								lst.add(i, getReplacement(replacement, parent));
 							}
 						}
 					}
@@ -425,17 +425,17 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 					for (Object obj : array) {
 						if (compare(obj, toReplace)) {
 							collect.remove(obj);
-							collect.add(getReplacement(toReplace, replacement, parent));
+							collect.add(getReplacement(replacement, parent));
 						}
 					}
 				} else if (compare(tmp, toReplace)) {
-					f.set(parent, getReplacement(toReplace, replacement, parent));
+					f.set(parent, getReplacement(replacement, parent));
 				}
 			}
 		}
 	}
 
-	private <T extends FactoryAccessor> T getReplacement(Object toReplace, T replacement, Object parent) {
+	private <T extends FactoryAccessor> T getReplacement(T replacement, Object parent) {
 		// T ret = replacement.getFactory().Core().clone(replacement);
 		if (replacement instanceof CtElement && parent instanceof CtElement) {
 			((CtElement) replacement).setParent((CtElement) parent);
