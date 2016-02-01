@@ -16,7 +16,21 @@
  */
 package spoon.support.reflect.declaration;
 
+import static spoon.reflect.ModelElementContainerDefaultCapacities.ANNOTATIONS_CONTAINER_DEFAULT_CAPACITY;
+
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+
 import spoon.Launcher;
 import spoon.processing.FactoryAccessor;
 import spoon.reflect.cu.SourcePosition;
@@ -37,17 +51,6 @@ import spoon.reflect.visitor.filter.AnnotationFilter;
 import spoon.support.util.RtHelper;
 import spoon.support.visitor.SignaturePrinter;
 import spoon.support.visitor.TypeReferenceScanner;
-
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static spoon.reflect.ModelElementContainerDefaultCapacities.ANNOTATIONS_CONTAINER_DEFAULT_CAPACITY;
 
 /**
  * Contains the default implementation of most CtElement methods.
@@ -149,6 +152,8 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 	String docComment;
 
 	SourcePosition position;
+	
+	Map<String, Object> metadata = new HashMap<String, Object>();
 
 	public CtElementImpl() {
 		super();
@@ -410,7 +415,7 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 						if (lst.get(i) != null && compare(lst.get(i), toReplace)) {
 							lst.remove(i);
 							if (replacement != null) {
-								lst.add(i, getReplacement(replacement, parent));
+								lst.add(i, getReplacement(toReplace, replacement, parent));
 							}
 						}
 					}
@@ -420,17 +425,17 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 					for (Object obj : array) {
 						if (compare(obj, toReplace)) {
 							collect.remove(obj);
-							collect.add(getReplacement(replacement, parent));
+							collect.add(getReplacement(toReplace, replacement, parent));
 						}
 					}
 				} else if (compare(tmp, toReplace)) {
-					f.set(parent, getReplacement(replacement, parent));
+					f.set(parent, getReplacement(toReplace, replacement, parent));
 				}
 			}
 		}
 	}
 
-	private <T extends FactoryAccessor> T getReplacement(T replacement, Object parent) {
+	private <T extends FactoryAccessor> T getReplacement(Object toReplace, T replacement, Object parent) {
 		// T ret = replacement.getFactory().Core().clone(replacement);
 		if (replacement instanceof CtElement && parent instanceof CtElement) {
 			((CtElement) replacement).setParent((CtElement) parent);
@@ -440,5 +445,20 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 
 	private boolean compare(Object o1, Object o2) {
 		return o1 == o2;
+	}
+	
+	@Override
+	public void setMetadata(String key, Object val) {
+		metadata.put(key, val);
+	}
+	
+	@Override
+	public Object getMetadata(String key) {
+		return metadata.get(key);
+	}
+	
+	@Override
+	public Set<String> getMetadataKeys() {
+		return metadata.keySet();
 	}
 }
