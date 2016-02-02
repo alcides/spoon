@@ -152,7 +152,7 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 	String docComment;
 
 	SourcePosition position;
-	
+
 	Map<String, Object> metadata = new HashMap<String, Object>();
 
 	public CtElementImpl() {
@@ -446,17 +446,17 @@ public abstract class CtElementImpl implements CtElement, Serializable, Comparab
 	private boolean compare(Object o1, Object o2) {
 		return o1 == o2;
 	}
-	
+
 	@Override
 	public void setMetadata(String key, Object val) {
 		metadata.put(key, val);
 	}
-	
+
 	@Override
 	public Object getMetadata(String key) {
 		return metadata.get(key);
 	}
-	
+
 	@Override
 	public Set<String> getMetadataKeys() {
 		return metadata.keySet();
