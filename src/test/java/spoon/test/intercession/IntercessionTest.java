@@ -163,8 +163,6 @@ public class IntercessionTest {
 				});
 
 		for (CtMethod<?> setter : setters) {
-			if (setter.getSimpleName().toLowerCase().contains("metadata")) continue;
-			
 			final String methodLog = setter.getSimpleName() + " in " +
 					setter.getDeclaringType().getSimpleName();
 			if (setter.getFormalTypeParameters().size() <= 0) {

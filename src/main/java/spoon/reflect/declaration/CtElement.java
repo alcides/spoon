@@ -232,7 +232,7 @@ public interface CtElement extends FactoryAccessor, CtVisitable {
 	/*
 	 * Saves metadata inside an Element.
 	 */
-	void setMetadata(String key, Object val);
+	<E extends CtElement> E setMetadata(String key, Object val);
 
 	/*
 	 * Retrieves metadata stored in an element. Returns null if it does not exist.
